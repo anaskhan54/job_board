@@ -14,3 +14,13 @@ class User(models.Model):
     )
     account_type=models.CharField(max_length=100,choices=choice,default='job_seeker')
 
+class Job(models.Model):
+    comapny_id=models.ForeignKey(User,on_delete=models.CASCADE)
+    job_title=models.CharField(max_length=100)
+    job_description=models.TextField()
+    location=models.CharField(max_length=100)
+    salary=models.IntegerField()
+    application_deadline=models.DateField()
+    status=models.CharField(max_length=6,choices=(('open','Open'),('closed','Closed')),default='open')
+    applicants=models.ManyToManyField(User,related_name='applicants')
+
