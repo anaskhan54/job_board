@@ -24,3 +24,8 @@ class Job(models.Model):
     status=models.CharField(max_length=6,choices=(('open','Open'),('closed','Closed')),default='open')
     applicants=models.ManyToManyField(User,related_name='applicants')
 
+class Application(models.Model):
+    job_seeker_id=models.ForeignKey(User,on_delete=models.CASCADE)
+    job_id=models.ForeignKey(Job,on_delete=models.CASCADE)
+    application_date=models.DateField(auto_now_add=True)
+    status=models.CharField(max_length=10,choices=(('pending','Pending'),('accepted','Accepted'),('rejected','Rejected')),default='pending')
