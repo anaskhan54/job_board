@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from api.serializers import UserSerializer,JobSerializer
-from api.forms import SignUpForm,LoginForm
+from api.forms import SignUpForm,LoginForm,JobPostForm
 import hashlib,bcrypt
 from django.http import QueryDict
 from api.models import User,Job
@@ -45,7 +45,13 @@ class JobListView(APIView):
         jobs=Job.objects.all()
         serializer=JobSerializer(jobs,many=True)
         return Response(serializer.data)
-
+class JobPostView(APIView):
+    def get(self,request):
+        form=JobPostForm()
+        return render(request,'api/jobpost.html',context={'form':form})
+    def post(self,request):
+        pass
+    
 
 
 

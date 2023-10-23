@@ -10,5 +10,8 @@ urlpatterns = [
     path('signup/',views.SignUpView.as_view(),name='signup'),
     path('login/',views.LoginView.as_view(),name='login'),
     path('job/list/',views.JobListView.as_view(),name='job-list'),
+    path('job/post/',views.JobPostView.as_view(),name='job-post'), #accessible to companies
+
+
     
 ]

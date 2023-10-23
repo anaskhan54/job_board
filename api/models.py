@@ -15,7 +15,7 @@ class User(models.Model):
     account_type=models.CharField(max_length=100,choices=choice,default='job_seeker')
     salt=models.CharField(max_length=100) #the salt 
 class Job(models.Model):
-    comapny_id=models.IntegerField(unique=True)
+    company_id=models.IntegerField(unique=True)
     job_title=models.CharField(max_length=100)
     job_description=models.TextField()
     location=models.CharField(max_length=100)

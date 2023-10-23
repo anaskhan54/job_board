@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a new Job</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <div>{{form.company_id.label_tag}} {{form.company_id}}</div>
+       <div> {{form.job_title.label_tag}} {{form.job_title}}</div>
+       <div> {{form.job_description.label_tag}} {{form.job_description}}</div>
+       <div> {{form.location.label_tag}} {{form.location}}</div>
+       <div> {{form.salary.label_tag}} {{form.salary}}</div>
+       <div> {{form.application_deadline.label_tag}} {{form.application_deadline}}</div>
+
+        <input type="submit" value="POST">
+    </form>
+</body>
+</html>
