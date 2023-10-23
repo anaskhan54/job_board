@@ -6,4 +6,8 @@ class SignUpForm(ModelForm):
     class Meta:
         model=User
         fields="__all__"
-        
+
+class LoginForm(ModelForm):
+    class Meta:
+        model=User
+        fields="__all__"        

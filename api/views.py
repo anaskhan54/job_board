@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from api.serializers import UserSerializer
-from api.forms import SignUpForm
+from api.forms import SignUpForm,LoginForm
 import hashlib,bcrypt
 from django.http import QueryDict
 
@@ -30,6 +30,13 @@ class SignUpView(APIView):
         if form.is_valid():
             form.save()
             return Response({"message":"success"})
+        
+class LoginView(APIView):
+    def get(self,request):
+        form=LoginForm()
+        return render(request,'api/login.html',context={'form':form})
+    
+    
 
 
 
