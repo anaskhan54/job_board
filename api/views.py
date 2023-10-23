@@ -2,11 +2,11 @@ from django.shortcuts import render,redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.serializers import UserSerializer
+from api.serializers import UserSerializer,JobSerializer
 from api.forms import SignUpForm,LoginForm
 import hashlib,bcrypt
 from django.http import QueryDict
-
+from api.models import User,Job
 
 class SignUpView(APIView):
     def get(self,request):
@@ -36,7 +36,16 @@ class LoginView(APIView):
         form=LoginForm()
         return render(request,'api/login.html',context={'form':form})
     
+    def post(self,request):
+        #Login code
+        pass
     
+class JobListView(APIView):
+    def get(self,request):
+        jobs=Job.objects.all()
+        serializer=JobSerializer(jobs,many=True)
+        return Response(serializer.data)
+
 
 
 
