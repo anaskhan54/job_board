@@ -39,14 +39,15 @@ class LoginView(APIView):
     def post(self,request):
         try:
             email=request.POST['email']
+            user=User.objects.get(email=email)
         except:
             return Response({"message":"user does not exist"})
         
         password=request.POST['password']
-        salt=User.objects.get(email=email).salt
+        salt=user.salt
         pw=(password+salt).encode('utf-8')
         pw=hashlib.sha256(pw).hexdigest()
-        hash=User.objects.get(email=email).password
+        hash=user.password
         print(pw)
         print(hash)
         if(hash==pw):
@@ -54,8 +55,9 @@ class LoginView(APIView):
         else:
             return Response({"message":"incorrect credentials"})
         
-        
     
+
+
 class JobListView(APIView):
     def get(self,request):
         jobs=Job.objects.all()
