@@ -29,3 +29,8 @@ class Application(models.Model):
     job_id=models.ForeignKey(Job,on_delete=models.CASCADE)
     application_date=models.DateField(auto_now_add=True)
     status=models.CharField(max_length=10,choices=(('pending','Pending'),('accepted','Accepted'),('rejected','Rejected')),default='pending')
+
+class PasswordReset(models.Model):
+    token=models.CharField(max_length=100)
+    isverified=models.BooleanField(default=False)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
