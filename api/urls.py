@@ -5,12 +5,13 @@ from rest_framework_simplejwt.views import(
                     TokenRefreshView,
 )
 urlpatterns = [
-    path('token/',TokenObtainPairView.as_view(),name='token_obtain_pair'),
-    path('token/refresh/',TokenRefreshView.as_view(),name='token_refresh'),
     path('signup/',views.SignUpView.as_view(),name='signup'),
     path('login/',views.LoginView.as_view(),name='login'),
+    path('password/reset/',views.PasswordResetView.as_view(),name='password-reset'),
+    path('password/reset/<str:token>/',views.PasswordResetActivateView.as_view(),name='password-reset-activate'),
     path('job/list/',views.JobListView.as_view(),name='job-list'),
     path('job/post/',views.JobPostView.as_view(),name='job-post'), #accessible to companies
+    
     
 
 

@@ -6,10 +6,11 @@ from api.serializers import UserSerializer,JobSerializer
 from api.forms import SignUpForm,LoginForm,JobPostForm
 import hashlib,bcrypt
 from django.http import QueryDict
-from api.models import User,Job
+from api.models import User,Job,PasswordReset
 import jwt
 from django.conf import settings
-
+from django.core.mail import send_mail
+import secrets
 
 class SignUpView(APIView):
     def get(self,request):
@@ -83,7 +84,44 @@ class JobPostView(APIView):
         else:
             
             return Response(form.errors)
+        
+class PasswordResetView(APIView):
+    def get(self,request):
+        return render(request,'api/passwordreset.html')
+    def post(self,request):
+        token=secrets.token_urlsafe(11)
+        email=request.POST['email']
+        x=0
+        try:
+            user=User.objects.get(email=email)
+        except:
+            x=1 #do nothing
+        password_reset=PasswordReset(token=token,user=user)
+        password_reset.save()
+        subject="Request For Password Reset"
+        message=f"Your Password Reset link is: http://127.0.0.1:8000/password/reset/{token}"
+        sender="professor00333@gmail.com"
+        receiver=[email]
+        if x==1:#dont send email
+            pass
+        else:
+            send_mail(subject,message,sender,receiver)
+        return Response({"message":"password reset link is sent to the email if exists"})
+        
+class PasswordResetActivateView(APIView):
+    def get(self,request,token):
+        try:    
+            password_reset=PasswordReset.objects.get(token=token)
+        except:
 
+            return Response({"message":"Invalid token."})
+        password_reset.isverified=True
+        password_reset.save()
+        return render(request,'api/verifytoken.html')
+    def post(self,request,token):
+        
+
+        
     
 
 
