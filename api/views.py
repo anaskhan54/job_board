@@ -37,8 +37,24 @@ class LoginView(APIView):
         return render(request,'api/login.html',context={'form':form})
     
     def post(self,request):
-        #Login code
-        pass
+        try:
+            email=request.POST['email']
+        except:
+            return Response({"message":"user does not exist"})
+        
+        password=request.POST['password']
+        salt=User.objects.get(email=email).salt
+        pw=(password+salt).encode('utf-8')
+        pw=hashlib.sha256(pw).hexdigest()
+        hash=User.objects.get(email=email).password
+        print(pw)
+        print(hash)
+        if(hash==pw):
+            return Response({"message":"login successful"})
+        else:
+            return Response({"message":"incorrect credentials"})
+        
+        
     
 class JobListView(APIView):
     def get(self,request):
