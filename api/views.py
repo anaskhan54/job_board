@@ -12,6 +12,10 @@ from django.conf import settings
 from django.core.mail import send_mail
 import secrets
 
+
+def hashing(password,salt,email):
+    password+=salt
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 class SignUpView(APIView):
     def get(self,request):
         form=SignUpForm()
@@ -119,7 +123,20 @@ class PasswordResetActivateView(APIView):
         password_reset.save()
         return render(request,'api/verifytoken.html')
     def post(self,request,token):
-        
+        new_password=str(request.POST['password'])
+        print(new_password)
+        try:
+            password_resets=PasswordReset.objects.get(token=token)
+        except:
+            return Response({"message":"Invalid token. "})
+        email=password_resets.user.email
+        user=User.objects.get(email=email)
+        salt=str(bcrypt.gensalt())
+        user.password=hashing(new_password,salt,email)
+        user.salt=salt
+        user.save()
+        return Response({"message":"password changed successfully"})
+    
 
         
     

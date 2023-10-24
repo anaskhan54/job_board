@@ -6,11 +6,17 @@ class SignUpForm(ModelForm):
     class Meta:
         model=User
         fields="__all__"
+        widgets={
+            'password':forms.PasswordInput()
+        }
 
 class LoginForm(ModelForm):
     class Meta:
         model=User
-        fields="__all__"        
+        fields="__all__"  
+        widgets={
+            'password':forms.PasswordInput()
+        }      
 
 class JobPostForm(ModelForm):
     class Meta:
