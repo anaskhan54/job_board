@@ -10,11 +10,7 @@ from api.models import User,Job
 import jwt
 from django.conf import settings
 
-class DashboardView(APIView):
-    def get(self,request):
-        user_data=request.user
-        print(user_data)
-        return Response({"message":"Welcome to dashboard"})
+
 class SignUpView(APIView):
     def get(self,request):
         form=SignUpForm()
@@ -55,7 +51,8 @@ class LoginView(APIView):
         pw=(password+salt).encode('utf-8')
         pw=hashlib.sha256(pw).hexdigest()
         hash=user.password
-        data={"account_type":user.account_type}
+        data={"account_type":user.account_type,
+              "user":user.id}
         if(hash==pw):
             #login successful
             secret=settings.JWT_SECRET
@@ -79,7 +76,14 @@ class JobPostView(APIView):
         form=JobPostForm()
         return render(request,'api/jobpost.html',context={'form':form})
     def post(self,request):
-        pass
+        form=JobPostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return Response({"message":"success"})
+        else:
+            
+            return Response(form.errors)
+
     
 
 

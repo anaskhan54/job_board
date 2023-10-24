@@ -15,4 +15,7 @@ class LoginForm(ModelForm):
 class JobPostForm(ModelForm):
     class Meta:
         model=Job
-        fields="__all__"
+        fields=["company_id","job_title","job_description",
+                "location",
+                "salary",
+                "application_deadline"]

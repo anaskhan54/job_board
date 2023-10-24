@@ -1,6 +1,7 @@
 import jwt
 from django.http import HttpResponseForbidden
 from django.conf import settings
+from api.models import User
 secret=settings.JWT_SECRET
 
 class JWTAuthenticationMiddleware:
@@ -8,13 +9,14 @@ class JWTAuthenticationMiddleware:
         self.get_response=get_response
 
     def __call__(self,request):
-        if request.path=='/dashboard':
+        if request.path=='/job/post/':
             token=request.COOKIES.get('jwt_token')
             if token:
                 try:
                     payload=jwt.decode(token,secret,algorithms=["HS256"])
                     if(payload.get("account_type")=="company"):
-                        request.user=payload
+                        #request.user=payload
+                        pass
                     else:
                         return HttpResponseForbidden("Access denied")
                 except jwt.ExpiredSignatureError:
