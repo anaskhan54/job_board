@@ -10,7 +10,11 @@ from api.models import User,Job
 import jwt
 from django.conf import settings
 
-
+class DashboardView(APIView):
+    def get(self,request):
+        user_data=request.user
+        print(user_data)
+        return Response({"message":"Welcome to dashboard"})
 class SignUpView(APIView):
     def get(self,request):
         form=SignUpForm()
