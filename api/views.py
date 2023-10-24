@@ -8,7 +8,8 @@ import hashlib,bcrypt
 from django.http import QueryDict
 from api.models import User,Job
 import jwt
-secret="vq5EBl56taMjaQ2XLpklX19yOjt7EuiNVlVgs8GokcK17hZd9WywoW6MXx40REkU"
+from django.conf import settings
+
 
 class SignUpView(APIView):
     def get(self,request):
@@ -53,8 +54,8 @@ class LoginView(APIView):
         data={"account_type":user.account_type}
         if(hash==pw):
             #login successful
+            secret=settings.JWT_SECRET
             token=jwt.encode(data,secret,algorithm="HS256")
-            print(token)
             response=Response({"jwt_token":token})
             response.set_cookie(key='jwt_token',value=token)
             return response
