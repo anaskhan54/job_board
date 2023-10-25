@@ -9,7 +9,7 @@ class JWTAuthenticationMiddleware:
         self.get_response=get_response
 
     def __call__(self,request):
-        if request.path=='/job/post/':
+        if request.path=='/job/post/' or request.path=='/application/cancel/':
             token=request.COOKIES.get('jwt_token')
             if token:
                 try:
@@ -23,6 +23,40 @@ class JWTAuthenticationMiddleware:
                     return HttpResponseForbidden("Token has expired")
                 except jwt.DecodeError:
                     return HttpResponseForbidden("Invalid token")
+            else:
+                return HttpResponseForbidden("Please Login First")
+        if request.path=='/job/apply/' or request.path=='/application/list':
+            token=request.COOKIES.get('jwt_token')
+            if token:
+                try:
+                    payload=jwt.decode(token,secret,algorithms=["HS256"])
+                    if(payload.get("account_type")=="job_seeker"):
+                        #request.user=payload
+                        pass
+                    else:
+                        return HttpResponseForbidden("Access denied")
+                except jwt.ExpiredSignatureError:
+                    return HttpResponseForbidden("Token has expired")
+                except jwt.DecodeError:
+                    return HttpResponseForbidden("Invalid token")
+            else:
+                return HttpResponseForbidden("Please Login First")
+        if request.path=='/admin/delete':
+            token=request.COOKIES.get('jwt_token')
+            if token:
+                try:
+                    payload=jwt.decode(token,secret,algorithms=["HS256"])
+                    if(payload.get("account_type")=="admin"):
+                        #request.user=payload
+                        pass
+                    else:
+                        return HttpResponseForbidden("Access denied")
+                except jwt.ExpiredSignatureError:
+                    return HttpResponseForbidden("Token has expired")
+                except jwt.DecodeError:
+                    return HttpResponseForbidden("Invalid token")
+            else:
+                return HttpResponseForbidden("Please Login First")
             
         response=self.get_response(request)
         return response

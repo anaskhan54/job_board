@@ -16,6 +16,9 @@ import secrets
 def hashing(password,salt,email):
     password+=salt
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
+class LandingPageView(APIView):
+    def get(self,request):
+        return render(request,'api/landing.html')
 class SignUpView(APIView):
     def get(self,request):
         form=SignUpForm()
@@ -136,6 +139,12 @@ class PasswordResetActivateView(APIView):
         user.salt=salt
         user.save()
         return Response({"message":"password changed successfully"})
+    
+class JobApplyView(APIView):
+    def get(self,request):
+        return Response({"message":"method not allowed"})
+    def post(self,request,id):
+        pass
     
 
         

@@ -139,3 +139,9 @@ EMAIL_HOST_PASSWORD = 'mfvckflpffdsqrqa'
 
 
 JWT_SECRET="vq5EBl56taMjaQ2XLpklX19yOjt7EuiNVlVgs8GokcK17hZd9WywoW6MXx40REkU"
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
