@@ -142,9 +142,17 @@ class PasswordResetActivateView(APIView):
     
 class JobApplyView(APIView):
     def get(self,request):
-        return Response({"message":"method not allowed"})
+        return render(request,'api/jobapply.html')
     def post(self,request,id):
-        pass
+
+        id=request.POST['id']
+        secret=settings.JWT_SECRETbject
+        job_applied_for=Job.objects.get(id=objectid)
+        token=request.COOKIES.get('jwr_token')
+        secret=settings.JWT_SECRET
+        data=jwt.decode(token,secret,algorithms=["HS256"])
+        userid=data.get("user")
+
     
 
         
