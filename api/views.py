@@ -32,13 +32,11 @@ class SignUpView(APIView):
             data[key]=value
         data['password']+=salt
         data['salt']=salt
-        print(data)
         data['password']=hashlib.sha256(data['password'].encode('utf-8')).hexdigest()
         final_data=QueryDict('',mutable=True)
         for key,value in data.items():
             final_data.update({key: value})
         
-        print(final_data)
         form=SignUpForm(final_data)
         if form.is_valid():
             form.save()
@@ -131,7 +129,7 @@ class PasswordResetActivateView(APIView):
         return render(request,'api/verifytoken.html')
     def post(self,request,token):
         new_password=str(request.POST['password'])
-        print(new_password)
+        
         try:
             password_resets=PasswordReset.objects.get(token=token)
         except:
