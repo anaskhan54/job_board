@@ -24,6 +24,8 @@ class SignUpView(APIView):
         form=SignUpForm()
         return render(request, 'api/signup.html',context={'form':form})
     def post(self,request):
+        if request.POST['account_type']=='admin':
+            return Response({"message":"You can not create admin account"})
         salt=str(bcrypt.gensalt())
         data={}
         for key,value in request.POST.items():
@@ -41,6 +43,8 @@ class SignUpView(APIView):
         if form.is_valid():
             form.save()
             return Response({"message":"success"})
+        else:
+            return Response(form.errors)
         
 class LoginView(APIView):
     def get(self,request):
