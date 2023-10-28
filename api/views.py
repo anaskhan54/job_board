@@ -52,7 +52,7 @@ class SignUpView(APIView):
         req = urllib.request.Request(url, data)
         response = urllib.request.urlopen(req)
         result = json.load(response)
-        if result['success'] or True:#remove true after testing!!!!!!!!!!!!!!!!!!!
+        if result['success']:
             form=SignUpForm(final_data)
             if form.is_valid():
                 form.save()
@@ -268,10 +268,13 @@ class ApplicationCancelView(APIView):
         user_id=my_data.get('user')
         user=User.objects.get(id=user_id)
         try:
-            application=Application.objects.filter(id=1)
+            application=Application.objects.get(id=id)
+            
         except:
             return Response({"message":"application does not exist"})
-        if(application.values()[0]['job_seeker_id_id']==user.id):
+        
+        if application.job_seeker_id_id==user.id:
+            
             application.delete()
             return Response({"message":"success"})
         else:
@@ -307,6 +310,19 @@ class AdminDeleteView(APIView):
     
 class ApplicationAllView(APIView):
     def get(self,request):
+        jwt_token = request.COOKIES.get('jwt_token')
+        secret = settings.JWT_SECRET
+
+        if jwt_token:
+            jwt_token = jwt_token.encode('utf-8')
+            my_data = jwt.decode(jwt_token, secret, algorithms=["HS256"])
+            user_id = my_data.get('user')
+            user_authenticated = User.objects.get(id=user_id)
+
+            if user_authenticated.account_type != "admin":
+                return Response({"message": "You are not an admin"})
+        else:
+            return Response({"message": "Login First"})
         applications=Application.objects.all()
         serializer=ApplicationSerializer(applications,many=True)
         return Response(serializer.data)
