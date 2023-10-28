@@ -9,7 +9,7 @@ class JWTAuthenticationMiddleware:
         self.get_response=get_response
 
     def __call__(self,request):
-        if request.path=='/job/post/' or request.path=='/application/cancel/':
+        if request.path=='/job/post/':
             token=request.COOKIES.get('jwt_token')
             if token:
                 try:
@@ -25,7 +25,7 @@ class JWTAuthenticationMiddleware:
                     return HttpResponseForbidden("Invalid token")
             else:
                 return HttpResponseForbidden("Please Login First")
-        if request.path=='/job/apply/' or request.path=='/job/list/':
+        if request.path=='/job/apply/' or request.path=='/job/list/'  or request.path=='/application/cancel/' or request.path=='/application/list/' :
             token=request.COOKIES.get('jwt_token')
             if token:
                 try:

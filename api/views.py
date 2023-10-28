@@ -15,7 +15,7 @@ import secrets
 import urllib.parse
 import urllib.request
 import json
-
+from datetime import datetime
 
 
 def hashing(password,salt,email):
@@ -111,6 +111,12 @@ class JobPostView(APIView):
         user=User.objects.get(id=user_id)
         data=JSONParser().parse(request)
         data['company_id']=user.id
+        if data['application_deadline']<str(datetime.now().date()):
+            return Response({"message":"deadline can not be in past"})
+        if data['salary'] < 0:
+            return Response({"message":"salary cannot be negative"})
+        if data['salary']<3000:
+            return Response({"message":"salary cannot be less than 3000"})
         serializer=JobSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -272,29 +278,32 @@ class ApplicationCancelView(APIView):
             return Response({"message":"you can not delete this application"})
         
 class AdminDeleteView(APIView):
-    def delete(self,request,email):
-        user_email=email
+    def delete(self, request, email):
+        user_email = email
+
+        # Check if the user exists
         if User.objects.filter(email=user_email).exists():
-            user=User.objects.filter(email=user_email)
+            user = User.objects.get(email=user_email)
         else:
-            return Response({"message":"user does not exist"})
-        jwt_token=request.COOKIES.get('jwt_token')
-        secret=settings.JWT_SECRET
+            return Response({"message": "User does not exist"})
+
+        jwt_token = request.COOKIES.get('jwt_token')
+        secret = settings.JWT_SECRET
+
         if jwt_token:
-            jwt_token=jwt_token.encode('utf-8')
-            my_data=jwt.decode(jwt_token,secret,algorithms=["HS256"])
-            user_id=my_data.get('user')
-            user=User.objects.get(id=user_id)
-            if user.account_type!="admin":
-                return Response({"message":"you are not admin"})
+            jwt_token = jwt_token.encode('utf-8')
+            my_data = jwt.decode(jwt_token, secret, algorithms=["HS256"])
+            user_id = my_data.get('user')
+            user_authenticated = User.objects.get(id=user_id)
+
+            if user_authenticated.account_type != "admin":
+                return Response({"message": "You are not an admin"})
         else:
-            return Response({"message":"Login First"})
-        
-        user=user[0]
-        
-        
+            return Response({"message": "Login First"})
+
         user.delete()
-        return Response({"message":"success"})
+        return Response({"message": "User deleted successfully"})
+
     
 class ApplicationAllView(APIView):
     def get(self,request):

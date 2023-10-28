@@ -25,3 +25,4 @@ class JobPostForm(ModelForm):
                 "location",
                 "salary",
                 "application_deadline"]
+        
