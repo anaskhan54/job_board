@@ -25,7 +25,7 @@ class JWTAuthenticationMiddleware:
                     return HttpResponseForbidden("Invalid token")
             else:
                 return HttpResponseForbidden("Please Login First")
-        if request.path=='/job/apply/' or request.path=='/application/list':
+        if request.path=='/job/apply/' or request.path=='/job/list/':
             token=request.COOKIES.get('jwt_token')
             if token:
                 try:
@@ -41,22 +41,7 @@ class JWTAuthenticationMiddleware:
                     return HttpResponseForbidden("Invalid token")
             else:
                 return HttpResponseForbidden("Please Login First")
-        if request.path=='/admin/delete':
-            token=request.COOKIES.get('jwt_token')
-            if token:
-                try:
-                    payload=jwt.decode(token,secret,algorithms=["HS256"])
-                    if(payload.get("account_type")=="admin"):
-                        #request.user=payload
-                        pass
-                    else:
-                        return HttpResponseForbidden("Access denied")
-                except jwt.ExpiredSignatureError:
-                    return HttpResponseForbidden("Token has expired")
-                except jwt.DecodeError:
-                    return HttpResponseForbidden("Invalid token")
-            else:
-                return HttpResponseForbidden("Please Login First")
+        
             
         response=self.get_response(request)
         return response
